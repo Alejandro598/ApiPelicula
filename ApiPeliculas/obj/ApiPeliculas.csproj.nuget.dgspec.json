@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\MAMAYOVA\\Desktop\\xd\\ApiPeliculas\\ApiPeliculas.csproj": {}
+    "C:\\Users\\MAMAYOVA\\Desktop\\apipelis\\ApiPeliculas\\ApiPeliculas.csproj": {}
   },
   "projects": {
-    "C:\\Users\\MAMAYOVA\\Desktop\\xd\\ApiPeliculas\\ApiPeliculas.csproj": {
+    "C:\\Users\\MAMAYOVA\\Desktop\\apipelis\\ApiPeliculas\\ApiPeliculas.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\MAMAYOVA\\Desktop\\xd\\ApiPeliculas\\ApiPeliculas.csproj",
+        "projectUniqueName": "C:\\Users\\MAMAYOVA\\Desktop\\apipelis\\ApiPeliculas\\ApiPeliculas.csproj",
         "projectName": "ApiPeliculas",
-        "projectPath": "C:\\Users\\MAMAYOVA\\Desktop\\xd\\ApiPeliculas\\ApiPeliculas.csproj",
+        "projectPath": "C:\\Users\\MAMAYOVA\\Desktop\\apipelis\\ApiPeliculas\\ApiPeliculas.csproj",
         "packagesPath": "C:\\Users\\MAMAYOVA\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\MAMAYOVA\\Desktop\\xd\\ApiPeliculas\\obj\\",
+        "outputPath": "C:\\Users\\MAMAYOVA\\Desktop\\apipelis\\ApiPeliculas\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages",

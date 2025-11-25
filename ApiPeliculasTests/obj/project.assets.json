@@ -4366,11 +4366,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\MAMAYOVA\\Desktop\\xd\\ApiPeliculasTests\\ApiPeliculasTests.csproj",
+      "projectUniqueName": "C:\\Users\\MAMAYOVA\\Desktop\\apipelis\\ApiPeliculasTests\\ApiPeliculasTests.csproj",
       "projectName": "ApiPeliculasTests",
-      "projectPath": "C:\\Users\\MAMAYOVA\\Desktop\\xd\\ApiPeliculasTests\\ApiPeliculasTests.csproj",
+      "projectPath": "C:\\Users\\MAMAYOVA\\Desktop\\apipelis\\ApiPeliculasTests\\ApiPeliculasTests.csproj",
       "packagesPath": "C:\\Users\\MAMAYOVA\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\MAMAYOVA\\Desktop\\xd\\ApiPeliculasTests\\obj\\",
+      "outputPath": "C:\\Users\\MAMAYOVA\\Desktop\\apipelis\\ApiPeliculasTests\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\DevExpress 23.1\\Components\\Offline Packages",
@@ -4395,8 +4395,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\MAMAYOVA\\Desktop\\xd\\ApiPeliculas\\ApiPeliculas.csproj": {
-              "projectPath": "C:\\Users\\MAMAYOVA\\Desktop\\xd\\ApiPeliculas\\ApiPeliculas.csproj"
+            "C:\\Users\\MAMAYOVA\\Desktop\\apipelis\\ApiPeliculas\\ApiPeliculas.csproj": {
+              "projectPath": "C:\\Users\\MAMAYOVA\\Desktop\\apipelis\\ApiPeliculas\\ApiPeliculas.csproj"
             }
           }
         }

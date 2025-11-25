@@ -1,54 +1,78 @@
-name: SonarCloud Simple
-
+name: Analisis SonarCloud
+# Este flujo se ejecutará en cada push a main y en cada Pull Request
 on:
   push:
     branches:
       - main
   pull_request:
-    types: [opened, synchronize, reopened]
+    branches:
+      - main
+  # También permite ejecuciones manuales
+  workflow_dispatch:
 
 jobs:
-  build:
-    name: Build and analyze
+  sonarcloud:
+    # Usamos el runner de Windows ya que la configuración original estaba en PowerShell
     runs-on: windows-latest
+    
     steps:
-      - name: Set up JDK 17
-        uses: actions/setup-java@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          java-version: 17
-          distribution: 'zulu'
+          # Esencial para que SonarCloud analice el "New Code" y determine la cobertura
+          fetch-depth: 0 
 
-      - uses: actions/checkout@v4
+      - name: Setup .NET
+        # Utiliza la versión 8.x, ajusta si tu proyecto usa otra
+        uses: actions/setup-dotnet@v4
         with:
-          fetch-depth: 0
+          dotnet-version: '8.x' 
 
-      - name: Cache SonarCloud packages
-        uses: actions/cache@v4
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-
-      - name: Cache SonarCloud scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v4
-        with:
-          path: ${{ runner.temp }}\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-
+      # Instala el scanner de SonarCloud como una herramienta global de .NET
       - name: Install SonarCloud scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
-          New-Item -Path ${{ runner.temp }}\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path ${{ runner.temp }}\scanner
+          dotnet tool install --global dotnet-sonarscanner
 
-      - name: Build and analyze
+      # Paso principal: Pre-procesamiento, Construcción, Pruebas, Cobertura y Análisis Final
+      - name: Build, Test, and Analyze
+        # Define el token para que esté disponible en el script de PowerShell
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        
+        # El shell de PowerShell se encarga de manejar las rutas y variables de entorno de Windows
         shell: powershell
         run: |
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner begin /k:"Alejandro598_ApiPelicula" /o:"alejandro598" /d:sonar.host.url="https://sonarcloud.io" /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          # -------------------------------------------------------------------------
+          # 1. BEGIN: Comando de pre-procesamiento de SonarScanner
+          # -------------------------------------------------------------------------
+          # Se usa el comando 'begin' para preparar la recopilación de datos de análisis.
+          # Nota: '$env:SONAR_TOKEN' es la forma correcta de acceder a la variable de entorno en PowerShell.
+          dotnet-sonarscanner begin `
+            /k:"Alejandro598_ApiPelicula" `
+            /o:"alejandro598" `
+            /d:sonar.host.url="https://sonarcloud.io" `
+            /d:sonar.token="$env:SONAR_TOKEN" `
+            /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.opencover.xml"
+          
+          # -------------------------------------------------------------------------
+          # 2. Construir (Build) el proyecto
+          # -------------------------------------------------------------------------
           dotnet build
-          ${{ runner.temp }}\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          
+          # -------------------------------------------------------------------------
+          # 3. Ejecutar Pruebas (Tests) y generar el reporte de cobertura (Coverlet)
+          # -------------------------------------------------------------------------
+          # Ejecutamos las pruebas sin reconstruir (--no-build).
+          # Parámetros Coverlet: Recolectar cobertura (CollectCoverage=true), formato OpenCover (necesario para SonarCloud)
+          dotnet test ApiPeliculasTests --no-build `
+            /p:CollectCoverage=true `
+            /p:CoverletOutputFormat=opencover `
+            /p:CoverletOutput="TestResults/"
+            
+          # -------------------------------------------------------------------------
+          # 4. END: Finaliza el análisis y sube los resultados a SonarCloud
+          # -------------------------------------------------------------------------
+          # El comando 'end' sube los metadatos de análisis y el reporte de cobertura.
+          dotnet-sonarscanner end `
+            /d:sonar.token="$env:SONAR_TOKEN"

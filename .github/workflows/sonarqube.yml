@@ -17,51 +17,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout
       - name: Checkout repository
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      # 2. Setup .NET
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'
 
-      # 3. Restore dependencies
       - name: Restore dependencies
         run: dotnet restore
 
-      # 4. Build solution
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      # 5. Run tests con cobertura CORRECTA
       - name: Run tests with coverage
         run: |
-          dotnet test --no-build --configuration Release \
+          dotnet test ApiPeliculasTests/ApiPeliculasTests.csproj --no-build --configuration Release \
             /p:CollectCoverage=true \
-            /p:CoverletOutput=TestResults/coverage \
+            /p:CoverletOutput=TestResults/ \
             /p:CoverletOutputFormat=cobertura
 
-      # (debug opcional)
-      - name: Check coverage result
-        run: ls -R TestResults || true
-
-      # 6. Instalar ReportGenerator
-      - name: Install ReportGenerator
+      - name: Install ReportGenerator (local)
         run: dotnet tool install --tool-path .reportgenerator dotnet-reportgenerator-globaltool
 
-      # 7. Generar reporte LCOV SIN errores
       - name: Generate coverage report
         run: |
           ./.reportgenerator/reportgenerator \
-            "-reports:TestResults/coverage.cobertura.xml" \
+            "-reports:ApiPeliculasTests/TestResults/coverage.cobertura.xml" \
             "-targetdir:coveragereport" \
             "-reporttypes:lcov"
 
-      # 8. SonarCloud Scan
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

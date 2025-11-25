@@ -1,6 +1,6 @@
 ﻿using ApiPeliculas.Data; // Necesario para AppDbContext
 using ApiPeliculas.Repositories; // Necesario para IPeliculaRepository y PeliculaRepository
-using ApiPeliculas.Service; // Necesario para IPeliculaService y PeliculaService
+using ApiPeliculas.Service;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -54,8 +54,9 @@ app.UseSwagger();
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "🎬 API Películas CRUD V1");
-    c.RoutePrefix = string.Empty; // Swagger en la raíz del sitio (opcional)
+    c.RoutePrefix = "swagger";
 });
+
 
 app.UseHttpsRedirection();
 app.UseAuthorization();

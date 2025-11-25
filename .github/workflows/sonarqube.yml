@@ -37,23 +37,27 @@ jobs:
       - name: Build
         run: dotnet build --no-restore --configuration Release
 
-      # 5. Run tests con cobertura (si no tienes tests igual funciona)
+      # 5. Run tests con cobertura CORRECTA
       - name: Run tests with coverage
         run: |
           dotnet test --no-build --configuration Release \
             /p:CollectCoverage=true \
-            /p:CoverletOutput=TestResults/ \
+            /p:CoverletOutput=TestResults/coverage \
             /p:CoverletOutputFormat=cobertura
 
-      # 6. Install ReportGenerator (LOCAL)
-      - name: Install ReportGenerator (local)
+      # (debug opcional)
+      - name: Check coverage result
+        run: ls -R TestResults || true
+
+      # 6. Instalar ReportGenerator
+      - name: Install ReportGenerator
         run: dotnet tool install --tool-path .reportgenerator dotnet-reportgenerator-globaltool
 
-      # 7. Generate coverage report in LCOV format
+      # 7. Generar reporte LCOV SIN errores
       - name: Generate coverage report
         run: |
           ./.reportgenerator/reportgenerator \
-            "-reports:**/coverage.cobertura.xml" \
+            "-reports:TestResults/coverage.cobertura.xml" \
             "-targetdir:coveragereport" \
             "-reporttypes:lcov"
 
@@ -68,5 +72,5 @@ jobs:
             -Dsonar.projectKey=Alejandro598_ApiPelicula
             -Dsonar.organization=alejandro598
             -Dsonar.host.url=https://sonarcloud.io
-            -Dsonar.cs.opencover.reportsPaths=**/coveragereport/lcov.info
+            -Dsonar.cs.opencover.reportsPaths=coveragereport/lcov.info
             -Dsonar.coverage.exclusions=**/wwwroot/**
